@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script>
+        MathJax.Hub.Config({
+          tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            processEscapes: true
+          }
+        });//			MathJax.Hub.Typeset();//tell Mathjax to update the math
+        </script>
+    </head>
+    <body>
+    <div id = "data" style = "display:none;">
+        {
+            "awg":27,
+            "a":10,
+            "r":20    
+        }
+    </div>
+    <div style = "display:none;" id = "action">
+            awg = data.awg;
+            a = data.a;
+            ameters = a*0.001;
+            d = Math.exp(2.1104 - 0.1159*awg)*0.001;        
+            n = (ameters/d)*(ameters/d);
+            r = data.r;
+            rmeters= 0.001*r;
+            c = 2*Math.PI*rmeters;
+            l = n*c;
+            A = Math.PI*(d/2)*(d/2);
+            rho = 1.7e-8;
+            R = rho*l/A; 
+    </div>
+    <table id = "intable">
+        <tr>
+            <td>awg</td><td><input></td>
+        </tr>
+        <tr>
+            <td>a[mm]</td><td><input></td>
+        </tr>
+        <tr>
+            <td>r[mm]</td><td><input></td>
+        </tr>
+        <tr>
+            <td>R[$\Omega$]</td><td><input></td>
+        </tr>
+        <tr>
+            <td>turns</td><td><input></td>
+        </tr>
+        <tr>
+            <td>diameter[mm]</td><td><input></td>
+        </tr>
+    </table>
+
+    <img id = "image1" src = "coil2.svg">
+    <div id = "equation">
+        $$d[\textrm{mm}] = e^{2.1104 - 0.1159\times\textrm{awg}}$$
+        $$d[\textrm{m}] = d[\textrm{mm}]\left(\frac{1 \textrm{m}}{1000 \textrm{ mm}}\right)$$
+        $$n = \left(\frac{a}{d}\right)^2$$
+        $$r[\textrm{m}] = r[\textrm{mm}]\left(\frac{1 \textrm{m}}{1000 \textrm{ mm}}\right)$$        
+        $$c = 2\pi r$$
+        $$l = nc$$
+        $$A = \pi\left(\frac{d}{2}\right)^2$$
+        $$\rho = 1.7\times 10^{-8} \Omega-m$$
+        $$R = \rho\frac{l}{A}$$
+    </div>
+<script>
+
+
+data = JSON.parse(document.getElementById("data").innerHTML);
+action = document.getElementById("action").innerHTML;
+eval(action);
+
+inputs = document.getElementById("intable").getElementsByTagName("input");
+inputs[0].value = awg;
+inputs[1].value = a;
+inputs[2].value = r;
+inputs[3].value = Math.round(R);
+inputs[4].value = Math.round(n);
+inputs[5].value = d*1000;
+
+inputs[0].onchange = function(){
+    data.awg = this.value;
+    eval(action);
+    inputs[3].value = Math.round(R);
+    inputs[4].value = Math.round(n);
+    inputs[5].value = d*1000;
+}
+inputs[1].onchange = function(){
+    data.a = this.value;
+    eval(action);
+    inputs[3].value = Math.round(R);
+    inputs[4].value = Math.round(n);
+    inputs[5].value = d*1000;
+}
+inputs[2].onchange = function(){
+    data.r = this.value;
+    eval(action);
+    inputs[3].value = Math.round(R);
+    inputs[4].value = Math.round(n);
+    inputs[5].value = d*1000;
+}
+
+
+</script>
+<style>
+#equation{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    top:0px;
+    font-size:1.5em;
+    z-index:0;
+}
+#intable{
+    position:absolute;
+    left:1em;
+    top:1em;
+    border-collapse:collapse;
+    z-index:2;
+}
+#intable td{
+    border:solid;
+}
+#image1{
+    position:absolute;
+    top:1em;
+    right:1em;
+    width:40%;
+}
+
+</style>
+</body>
+</html>
